@@ -75,14 +75,11 @@ class Bullets(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = y
         self.rect.centerx = x
-        self.neg_speed_x, self.neg_speed_y = 5, -5
+        self.neg_speed_x, self.neg_speed_y = 10, -10
 
     def update(self):
         player.getMouse()
-        if player.mousex > player.rect.centerx:
-            self.rect.centerx += self.neg_speed_x
-        # else:
-        #     self.rect.x += self.neg_speed_y
+        self.rect.x += self.neg_speed_y
         # kill if it moves off the top of the screen
         if self.rect.bottom < 0:
             self.kill()
