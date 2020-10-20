@@ -1,11 +1,13 @@
 import pygame
+from pygame.locals import MOUSEBUTTONDOWN
 from game_settings import *
 
+clock = pygame.time.Clock()
 
 pygame.init()
 
+pygame.display.set_caption("Grid War")
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
@@ -52,8 +54,12 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top < tileSize * 3:
             self.rect.top = tileSize * 3
 
-    def shoot(self):
-        bullet = Bullets(self.rect.centerx, self.rect.top)
+    def getMouse(self):
+        self.mousex, self.mousey = pygame.mouse.get_pos()
+
+    def shootBullet(self):
+        # player.getMousePos()
+        bullet = Bullets(self.rect.centerx, self.rect.bottom)
         all_sprites.add(bullet)
         bullets.add(bullet)
 
@@ -63,16 +69,20 @@ class Bullets(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((8, 20))
+        self.image = pygame.Surface((10, 10))
         self.image.fill(WHITE)
 
         self.rect = self.image.get_rect()
         self.rect.bottom = y
         self.rect.centerx = x
-        self.speedy = -10
+        self.neg_speed_x, self.neg_speed_y = 5, -5
 
     def update(self):
-        self.rect.y += self.speedy
+        player.getMouse()
+        if player.mousex > player.rect.centerx:
+            self.rect.centerx += self.neg_speed_x
+        # else:
+        #     self.rect.x += self.neg_speed_y
         # kill if it moves off the top of the screen
         if self.rect.bottom < 0:
             self.kill()
@@ -108,6 +118,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1:
+                player.shootBullet()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.shoot()
