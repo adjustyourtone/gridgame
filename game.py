@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import MOUSEBUTTONDOWN
 from game_settings import *
+import math
 
 clock = pygame.time.Clock()
 
@@ -54,12 +55,12 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top < tileSize * 3:
             self.rect.top = tileSize * 3
 
-    def getMouse(self):
-        self.mousex, self.mousey = pygame.mouse.get_pos()
+    # def getMouse(self):
+    #     self.mousex, self.mousey = pygame.mouse.get_pos()
 
     def shootBullet(self):
-        # player.getMousePos()
-        bullet = Bullets(self.rect.centerx, self.rect.bottom)
+
+        bullet = Bullets(self.rect.x, self.rect.y)
         all_sprites.add(bullet)
         bullets.add(bullet)
 
@@ -67,22 +68,27 @@ class Player(pygame.sprite.Sprite):
 class Bullets(pygame.sprite.Sprite):
     """This defines a bullet class that will shoot out of the sprite"""
 
-    def __init__(self, x, y):
+    def __init__(self, dx, dy):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((10, 10))
         self.image.fill(WHITE)
 
         self.rect = self.image.get_rect()
-        self.rect.bottom = y
-        self.rect.centerx = x
-        self.neg_speed_x, self.neg_speed_y = 5, -5
+        self.rect.bottom = dy
+        self.rect.centerx = dx
 
     def update(self):
-        player.getMouse()
-        if player.mousex > player.rect.centerx:
-            self.rect.centerx += self.neg_speed_x
-        # else:
-        #     self.rect.x += self.neg_speed_y
+        self.mouseX, self.mouseY = pygame.mouse.get_pos()
+        self.speed = 8
+        angle = math.atan2(self.mouseY, self.mouseX)
+        print(int(angle*180/math.pi))
+
+        self.dx = math.cos(angle) * self.speed
+        self.dy = math.sin(angle) * self.speed
+
+        self.rect.x = self.rect.x + int(self.dx)
+        self.rect.y = self.rect.y + int(self.dy)
+
         # kill if it moves off the top of the screen
         if self.rect.bottom < 0:
             self.kill()
