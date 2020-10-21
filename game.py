@@ -58,20 +58,20 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         x, y = pygame.mouse.get_pos()
         b = Bullets(RED, player.rect.centerx,
-                    player.rect.centery, 20, 20, 20, x, y)
+                    player.rect.centery, 10, 10, x, y)
         bullets.append(b)
 
 
 class Bullets(Player):
-    def __init__(self, color, x, y, width, height, speed, targetx, targety):
+    def __init__(self, color, x, y, width, height, targetx, targety):
         self.rect = pygame.Rect(x, y, width, height)
         self.color = color
-        self.speed = 5
+        self.speed = 10
         # get angle to target in radians
         angle = math.atan2(targety-y, targetx-x)
         print('Angle in degrees:', int(angle*180/math.pi))
-        self.dx = math.cos(angle)*speed
-        self.dy = math.sin(angle)*speed
+        self.dx = math.cos(angle)*self.speed
+        self.dy = math.sin(angle)*self.speed
         self.x = x
         self.y = y
 
@@ -121,9 +121,6 @@ while running:
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
                 player.shoot()
-                # elif event.type == pygame.KEYDOWN:
-                #     if event.key == pygame.K_SPACE:
-                #         player.shoot()
     all_sprites.update()
 
     gameDisplay.fill(BLACK)
