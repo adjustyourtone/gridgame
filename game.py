@@ -57,12 +57,12 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self):
         x, y = pygame.mouse.get_pos()
-        b = Bullets(RED, player.rect.centerx,
-                    player.rect.centery, 10, 10, x, y)
+        b = Bullet(RED, player.rect.centerx,
+                   player.rect.centery, 10, 10, x, y)
         bullets.append(b)
 
 
-class Bullets(Player):
+class Bullet(Player):
     def __init__(self, color, x, y, width, height, targetx, targety):
         self.rect = pygame.Rect(x, y, width, height)
         self.color = color
