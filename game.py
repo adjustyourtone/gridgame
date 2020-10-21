@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import MOUSEBUTTONDOWN
+from pygame.constants import *
 from game_settings import *
 import math
 
@@ -8,7 +9,11 @@ clock = pygame.time.Clock()
 pygame.init()
 
 pygame.display.set_caption("Grid War")
-gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
+monitor_size = [pygame.display.Info().current_w,
+                pygame.display.Info().current_w]
+gameDisplay = pygame.display.set_mode((1024, 768), pygame.RESIZABLE)
+
+fullscreen = False
 
 
 class Player(pygame.sprite.Sprite):
@@ -116,6 +121,21 @@ running = True
 while running:
 
     for event in pygame.event.get():
+        # for screen resizing
+        if event.type == VIDEORESIZE:
+            if not fullscreen:
+                gameDisplay = pygame.display.set_mode(
+                    (event.w, event.h), pygame.RESIZABLE)
+        #  for fullscreen
+        if event.type == KEYDOWN:
+            if event.key == K_l:
+                fullscreen = not fullscreen
+                if fullscreen:
+                    gameDisplay = pygame.display.set_mode(
+                        monitor_size, pygame.FULLSCREEN)
+                else:
+                    gameDisplay = pygame.display.set_mode(
+                        (gameDisplay.get_width(), gameDisplay.get_height()), pygame.RESIZABLE)
         if event.type == pygame.QUIT:
             running = False
         if event.type == MOUSEBUTTONDOWN:
